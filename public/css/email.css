@@ -1,0 +1,62 @@
+
+.card-header, .card-body{
+    font-size:90% ;
+}
+.none{
+    display:none;
+}
+.email-checkbox, .email-favorite{
+    width: 5%;
+    text-align: center;
+
+}
+tbody{
+    width: inherit;
+}
+.email-name{
+    width:20%;
+}
+.email-subject{
+    width: 45%;
+}
+.email-date{
+    width: 25%;
+    text-align: right;
+
+}
+.btn-warning, .btn-danger, .btn-primary, .btn-new, .btn-success{
+    margin-right:5px;
+    margin-bottom: 5px;
+    color:#eeeeee;
+}
+.btn:hover, .btn-danger:hover, .btn-primary:hover, .btn-new:hover{
+    color:#000000;
+}
+.btn-info{
+    margin-left: 5px;
+
+}
+.btn-new{
+    background:#5bc0de;
+    border:1px solid #2f4050;
+}
+.red{
+    background: red;
+    width: 100%;
+    height: 100%;
+
+}
+.fas.fa-star{
+    color: gold;
+}
+.form-group{
+    padding:10px;
+}
+textarea{
+    padding-left:20px;
+    padding-right:20px;
+}
+
+.unread td{
+    font-weight: bold;
+}
