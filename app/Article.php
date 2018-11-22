@@ -33,13 +33,10 @@ class Article extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function approved(){
-        return $this->approved ? 'Approved' : 'Unapproved';
-    }
-
     public function approvedBy(){
 
-        return User::whereId($this->approved_by)->first() ? User::whereId($this->approved_by)->first()->name : 'No one';
+        //return User::whereId($this->approved_by)->first() ? User::whereId($this->approved_by)->first()->name : 'No one';
+        return $this->belongsTo(User::class, 'approved_by')->withDefault(['name'=>'No one']);
     }
 
     public function comments(){

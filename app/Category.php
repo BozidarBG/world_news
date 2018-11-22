@@ -21,11 +21,11 @@ class Category extends Model
     }
 
     public function articles(){
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Article::class)->orderBy('updated_at', 'desc');
     }
 
     public function latestFourArticles(){
-        $articles=Article::where('category_id', $this->id)->oldest('updated_at')->take(4)->get();
+        $articles=Article::with('category', 'user')->where('category_id', $this->id)->oldest('updated_at')->take(4)->get();
         return $articles;
     }
 }

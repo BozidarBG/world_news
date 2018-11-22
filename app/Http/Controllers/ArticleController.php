@@ -16,7 +16,7 @@ class ArticleController extends Controller
     public function approved()
     {
         return view('admin.articles.index')
-            ->with('articles', Article::where('approved', 1)->orderBy('updated_at','desc')->paginate(10))
+            ->with('articles', Article::with('user','category', 'approvedBy')->where('approved', 1)->orderBy('updated_at','desc')->paginate(10))
             ->with('page_name', 'Approved')
             ->with('users', User::whereIn('role_id',[3, 2, 4])->get())
             ->with('categories', Category::all())
@@ -26,7 +26,7 @@ class ArticleController extends Controller
     public function unapproved()
     {
         return view('admin.articles.index')
-            ->with('articles', Article::where('approved', 0)->orderBy('updated_at','desc')->paginate(10))
+            ->with('articles', Article::with('user','category')->where('approved', 0)->orderBy('updated_at','desc')->paginate(10))
             ->with('page_name', 'Unapproved')
             ->with('users', User::whereIn('role_id',[3, 2, 4])->get())
             ->with('categories', Category::all())
@@ -41,7 +41,7 @@ class ArticleController extends Controller
     public function trashed(){
 
         return view('admin.articles.trashed')
-            ->with('articles', Article::onlyTrashed()->orderBy('updated_at','desc')->paginate(10))
+            ->with('articles', Article::with('user','category')->onlyTrashed()->orderBy('updated_at','desc')->paginate(10))
             ->with('users', User::whereIn('role_id',[3, 2, 4])->get())
             ->with('categories', Category::all())
             ->with('page_name', 'Trashed');

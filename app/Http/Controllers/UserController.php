@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index()
     {
         return view('admin.users.index')
-            ->with('users', User::where('role_id','!=', 1)->get());
+            ->with('users', User::with('role')->where('role_id','!=', 1)->get());
     }
 
 

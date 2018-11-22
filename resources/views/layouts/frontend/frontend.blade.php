@@ -24,7 +24,8 @@
     <link rel="stylesheet" href="{{asset('css/magnific-popup.css')}}">
     <link rel="stylesheet" href="{{asset('css/owl.carousel.css')}}">
     <link rel="stylesheet" href="{{asset('css/frontend_style.css')}}">
-
+    @toastr_css
+    @yield('styles')
 </head>
 
 <body>
@@ -210,6 +211,24 @@
 @else
 <script src="{{asset('js/reply.js')}}"></script>
 @endif
+@toastr_js
+<script>
+    @if(Session::has('success'))
+        toastr.options.hideMethod = 'slideUp';
+    toastr.success("{{Session::get('success')}}");
+    @endif
+
+    @if(Session::has('info'))
+        toastr.options.hideMethod = 'slideUp';
+    toastr.info("{{Session::get('info')}}");
+    @endif
+
+    @if(Session::has('error'))
+        toastr.options.hideMethod = 'slideUp';
+    toastr.error("{{Session::get('error')}}");
+    @endif
+</script>
+@yield('scripts')
 </body>
 
 </html>

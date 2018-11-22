@@ -21,7 +21,7 @@ class CategoryController extends Controller
         if($request->ajax()){
             return response()->json($categories->last());
         }
-        return view('admin.categories.index')->with('categories',Category::all());
+        return view('admin.categories.index')->with('categories',$categories);
     }
 
 

@@ -5,19 +5,41 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Article;
+use Illuminate\Support\Facades\Cache;
 
 class FrontendController extends Controller
 {
 
     public function index()
     {
-        return view('start');
+        $arr=[];
+
+        $categories=Cache::remember('categories', 1440, function(){
+            return Category::select('id','importance', 'title', 'slug')->orderBy('importance')->get();
+        });
+
+        for($i=0; $i<count($categories); $i++){
+
+            $data=Cache::remember("data[$i]", 15, function() use ($categories, $i){
+                return Article::with('user')->where('category_id', $categories[$i]['id'])->where('approved', 1)->oldest('updated_at')->take(4)->get()->toArray();;
+            });
+
+            $newarr=['category'=>$categories[$i], 'articles'=>$data ];
+            array_push($arr, $newarr);
+        }
+        //dd($arr);
+
+        return view('start')
+            ->with('data',$arr)
+            ;
     }
 
 
     public function show($category_slug, $article_slug)
     {
-        $article=Article::where('slug', $article_slug)->first();
+        $article=Article::with(['user', 'comments'=>function($query){
+            $query->where('approved', 1)->get();
+        },'comments.user', 'comments.replies.user'])->where('slug', $article_slug)->first();
         if(!$article){
             return redirect()->back();
         }
@@ -36,7 +58,7 @@ class FrontendController extends Controller
             'query'=>'required|string'
         ]);
 
-        $articles=Article::where('approved', 1)
+        $articles=Article::with('user', 'comments.replies')->where('approved', 1)
             ->where('title', 'like', '%'.request('query').'%')
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
@@ -48,13 +70,17 @@ class FrontendController extends Controller
 
     public function byCategory($slug){
 
-        if(Category::where('slug',$slug)->first()==null){
+
+
+        $category=Category::where('slug',$slug)->first();
+
+        if($category==null){
             return redirect()->back();
         }
-        $category=Category::where('slug', $slug)->first();
+        //$category=Category::where('slug', $slug)->first();
 
 
-        $articles=Article::where('category_id', $category->id)
+        $articles=Article::with('user', 'category' , 'comments')->where('category_id', $category->id)
             ->where('approved', 1)
             ->orderBy('updated_at', 'desc')
             ->paginate(10);

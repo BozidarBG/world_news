@@ -10,7 +10,7 @@ use App\Article;
 use App\Setting;
 use Auth;
 use App\Important;
-
+use Illuminate\Support\Facades\Cache;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,14 +22,34 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        //
-        //dd(Important::all()->toArray());
+
         Schema::defaultStringLength(191);
-        View::share('categories',Category::orderBy('importance', 'asc')->get());
-        View::share('sidebar_articles',Article::orderBy('hits', 'desc')->take(6)->get());
-        view::share('fr_slider', Important::all());
-        View::share('asideslider', Article::where('category_id', 2)->orderBy('updated_at', 'desc')->take(4)->get());
-        View::share('settings', Setting::first());
+
+        $categories=Cache::remember('categories', 1440, function(){
+            return Category::orderBy('importance', 'asc')->get();
+        });
+
+        $sidebar_articles=Cache::remember('sidebar_articles', 15, function(){
+            return Article::with('user','category', 'comments')->orderBy('hits', 'desc')->take(6)->get();
+        });
+
+        $fr_slider=Cache::remember('fr_slider', 15, function(){
+           return Important::with('article.category', 'article.user')->get();
+        });
+
+        $aside_slider=Cache::remember('aside_slider', 15,function(){
+            return Article::with('user.comments.replies', 'category')->where('category_id', 2)->orderBy('updated_at', 'desc')->take(4)->get();
+        });
+
+        $settings=Cache::remember('settings', 1440, function(){
+            return Setting::first();
+        });
+
+        View::share('categories',$categories);
+        View::share('sidebar_articles',$sidebar_articles);
+        view::share('fr_slider', $fr_slider);
+        View::share('asideslider', $aside_slider);
+        View::share('settings', $settings);
 
     }
 

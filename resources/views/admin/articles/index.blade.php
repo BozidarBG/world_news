@@ -64,11 +64,10 @@
                                 <td>{{$article->category->title}}</td>
                                 <td>{{$article->title}}</td>
                                 <td>{{$article->user->name}}</td>
-                                <td>{{$article->approved()}}</td>
-                                <td>{{$article->approvedBy()}}</td>
-                                <td>{{$article->updated_at->format('d.m.Y')}}
-                                    <br>
-                                    {{$article->updated_at->format('H:i:s')}}</td>
+                                <td>{{$article->approved ? 'Approved' : 'Unapproved'}}</td>
+                                <td>{{$article->approvedBy->name}}</td>
+                                <td>{{$article->updated_at->format('d.m.Y H:i')}}
+                                    </td>
                                 @if(Auth::user()->isJournalist())
                                     <td><a href="{{route('articles.edit', $article->slug)}}" class="btn btn-info btn-sm">Edit</a></td>
                                     <td>

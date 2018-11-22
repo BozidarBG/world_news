@@ -58,7 +58,7 @@
                         <!--pored slajdera-->
                         <div class="col-12 col-md-6">
                             <!-- Single Blog Post -->
-                            @if($asideslider->count()>0)
+                            @if($asideslider->count())
                                 <?php $sec=0.2; ?>
                                 @foreach($asideslider as $article)
                             <div class="single-blog-post post-style-2 d-flex align-items-center wow fadeInUpBig" data-wow-delay="$sec.s">
@@ -99,42 +99,44 @@
 
 
 
-<!-- kategorija levo i kategorija desno ------------------------------------------------>
+<!-- 4 articles by category, left and right ------------------------------------------------>
 <div class="world-latest-articles">
     <div class="row">
-        @foreach($categories as $category)
+        @for($i=0; $i<count($data); $i++)
+
         <div class="col-12 col-lg-6">
             <div class="title">
-                <h5>{{$category->title}}</h5>
+                <h5>{{$data[$i]['category']['title']}}</h5>
             </div>
             <?php $seconds=0.2; ?>
-            @foreach($category->latestFourArticles() as $article)
+
+                @for($x=0; $x<count($data[$i]['articles']); $x++)
             <!-- Single Blog Post -->
             <div class="single-blog-post post-style-4 d-flex align-items-center single-height wow fadeInUpBig" data-wow-delay="$seconds.s">
                 <!-- Post Thumbnail -->
                 <div class="post-thumbnail">
-                    <img src="{{$article->photo}}" alt="{{$article->title}}">
+                    <img src="{{asset($data[$i]['articles'][$x]['photo'])}}" alt="{{$data[$i]['articles'][$x]['title']}}">
                 </div>
                 <!-- Post Content -->
                 <div class="post-content">
-                    <a href="{{route('show', ['category_slug'=>$article->category->slug, 'article_slug'=>$article->slug ])}}" class="headline">
-                        <h5>{{$article->title}}</h5>
+                    <a href="{{route('show', ['category_slug'=>$data[$i]['category']['slug'], 'article_slug'=>$data[$i]['articles'][$x]['slug'] ])}}" class="headline">
+                        <h5>{{$data[$i]['articles'][$x]['title']}}</h5>
                     </a>
-                    <p>{{$article->shortenText(10)}}</p>
+                    <p>{{substr($data[$i]['articles'][$x]['body'], 0, 60).'...'}}</p>
                     <!-- Post Meta -->
                     <div class="post-meta">
-                        <p><span class="post-author">{{$article->user->name}}</span> on <span class="post-date">{{$article->showDate()}}</></p>
+                        <p><span class="post-author">{{$data[$i]['articles'][$x]['user']['name']}}</span> on <span class="post-date">{{$data[$i]['articles'][$x]['updated_at']}}</span></p>
                     </div>
                 </div>
             </div>
             <?php $seconds+=0.1; ?>
-            @endforeach
+            @endfor
 
         </div>
-@endforeach
+@endfor
 
     </div>
 </div>
-<!--- kraj kategorije levo i desno ------------------------------------------------------>
+<!--- end 4 articles by category, left and right ------------------------------------------------------>
 
     @endsection

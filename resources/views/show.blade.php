@@ -90,7 +90,7 @@
                         <!-- Comment Meta -->
                         <div class="comment-meta d-flex align-items-center justify-content-between">
                             <p>
-                                <span class="post-author">{{$comment->user->name}}</span> on <span class="post-date">{{$comment->showDate($comment->created_at, true)}}</span>
+                                <span class="post-author">{{$comment->user->name}}</span> commented on <span class="post-date">{{$comment->showDate($comment->created_at, true)}}</span>
                             </p>
                             @if(Auth::check())
                             <a href="#" class="comment-reply btn world-btn">Reply</a>
@@ -133,7 +133,7 @@
                                 <!-- Reply Meta -->
                                 <div class="comment-meta d-flex align-items-center justify-content-between">
                                     <p>
-                                        <span class="post-author">{{$reply->user->name}}</span> on <span class="post-date">{{$reply->showDate($reply->created_at, true)}}</span>
+                                        <span class="post-author">{{$reply->user->name}}</span> replied on <span class="post-date">{{$reply->showDate($reply->created_at, true)}}</span>
                                     </p>
                                 </div>
                                 <p>{{$reply->body}}</p>
@@ -158,22 +158,5 @@
 @endsection
 
 @section('scripts')
-    @toastr_js
-    <script src="{{asset('js.toastr.js')}}"></script>
-    <script>
-        @if(Session::has('success'))
-            toastr.options.hideMethod = 'slideUp';
-        toastr.success("{{Session::get('success')}}");
-        @endif
 
-        @if(Session::has('info'))
-            toastr.options.hideMethod = 'slideUp';
-        toastr.info("{{Session::get('info')}}");
-        @endif
-
-        @if(Session::has('error'))
-            toastr.options.hideMethod = 'slideUp';
-        toastr.error("{{Session::get('error')}}");
-        @endif
-    </script>
     @endsection
